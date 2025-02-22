@@ -1,6 +1,6 @@
 import React from "react";
 
-const DisplayContacts = ({ persons, filter }) => {
+const DisplayContacts = ({ persons, filter, deleteFn }) => {
   return (
     <>
       {persons
@@ -9,7 +9,8 @@ const DisplayContacts = ({ persons, filter }) => {
         )
         .map((person, index) => (
           <p key={index}>
-            {person.name} {person.number}
+            {person.name} {person.number}{" "}
+            <button onClick={() => deleteFn(person.id)}>delete</button>
           </p>
         ))}
     </>
