@@ -4,12 +4,15 @@ import FilterNames from "./components/FilterNames";
 import AddName from "./components/AddName";
 import DisplayContacts from "./components/DisplayContacts";
 import services from "./services/persons";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [notification, setNotification] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
     services.getAll().then((initPersons) => setPersons(initPersons));
@@ -33,10 +36,23 @@ const App = () => {
                 p.id === updatedPerson.id ? updatedPerson : p
               )
             );
+            setNotification(`Added ${updatedPerson.name}`);
+
+            setTimeout(() => {
+              setNotification(null);
+            }, 5000);
             setNewName("");
             setNewNumber("");
           })
-          .catch((e) => console.error(e));
+          .catch((e) => {
+            setErrorMsg(
+              `Information of ${changed.name} has already been removed from the server`
+            );
+
+            setTimeout(() => {
+              setErrorMsg(null);
+            }, 5000);
+          });
       }
 
       return;
@@ -54,6 +70,11 @@ const App = () => {
         setPersons(persons.concat(person));
         setNewName("");
         setNewNumber("");
+        setNotification(`Added ${person.name}`);
+
+        setTimeout(() => {
+          setNotification(null);
+        }, 5000);
       })
       .catch((e) => console.error(e));
   };
@@ -74,6 +95,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification} type="success" />
+      <Notification message={errorMsg} type="error" />
 
       <FilterNames setFilter={setFilter} />
       <h2>add a new</h2>
