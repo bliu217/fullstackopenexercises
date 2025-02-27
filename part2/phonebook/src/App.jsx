@@ -76,7 +76,13 @@ const App = () => {
           setNotification(null);
         }, 5000);
       })
-      .catch((e) => console.error(e));
+      .catch((error) => {
+        setErrorMsg(`${error.response.data.error}`);
+
+        setTimeout(() => {
+          setErrorMsg(null);
+        }, 5000);
+      });
   };
 
   const deleteFunc = (id) => {
